@@ -5,6 +5,7 @@ cdef extern from "MadgwickAHRS/MadgwickAHRS.cpp":
     pass
 
 cdef extern from "MadgwickAHRS/MadgwickAHRS.h":
+    float sampleFreq
     float beta
     float q0, q1, q2, q3
 

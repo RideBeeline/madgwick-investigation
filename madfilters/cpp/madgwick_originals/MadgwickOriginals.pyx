@@ -1,4 +1,4 @@
-"""Interfaces to the c based filters"""
+"""Interfaces to the original c based filters"""
 cimport cython
 import numpy as np
 cimport numpy as np
@@ -8,11 +8,12 @@ DTYPE = np.double # Default datatype for numpy arrays
 ctypedef np.double_t DTYPE_t
 
 cdef class MadgwickOriginal:
-    """This is the original, unmodified code. It defines f as 512Hz constant."""
+    """This is the original filter with the ability to change frequency added to it."""
 
-    def __init__(self, q0 = [1.0, 0.0, 0.0, 0.0], beta = 0.1):
+    def __init__(self, q0 = [1.0, 0.0, 0.0, 0.0], beta = 0.1, freq = 256):
         self.set_q(q0)
-        orig.beta = beta
+        self.set_beta(beta)
+        self.set_freq(freq)
     
     def set_q(self, q):
         orig.q0 = q[0]
@@ -22,6 +23,9 @@ cdef class MadgwickOriginal:
 
     def set_beta(self, beta):
         orig.beta = beta
+    
+    def set_freq(self, freq):
+        orig.sampleFreq = freq
 
     @cython.boundscheck(False)
     @cython.wraparound(False)  
