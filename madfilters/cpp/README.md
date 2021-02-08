@@ -28,6 +28,11 @@ Adafruit's library from their [github](https://github.com/adafruit/Adafruit_AHRS
 
 Small change to make members public, makes it possible to set q0.
 
+## Arduino Madgwick
+`Adafruit_AHRS/src/Adafruit_AHRS_Madgwick.cpp`
+Arduino's library from their [github](https://github.com/arduino-libraries/MadgwickAHRS)
+
+Turns out is just the same code as Adafruit's, same small change to make members public.
 
 ## Installation
 
