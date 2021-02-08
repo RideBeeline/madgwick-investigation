@@ -9,10 +9,10 @@ class AhrsMadgwick:
 
         q0 = np.array(q0)
         self.filter = ahrs.filters.Madgwick(q0=q0, gain = beta, frequency = freq)
-        self.q = q0
+        self.q = q0.copy()
     
     def set_q(self, q):
-        self.q = q
+        self.q = q.copy()
     
     def set_beta(self, beta):
         self.filter.gain = beta
