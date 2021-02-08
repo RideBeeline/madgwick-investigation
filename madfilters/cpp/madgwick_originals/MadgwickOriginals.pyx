@@ -5,6 +5,7 @@ cimport numpy as np
 cimport madg_orig_s as orig
 cimport madg_orig_sqrt as orig_sqrt
 cimport madg_orig_sqrt_d as orig_sqrt_d
+cimport madg_orig_sqrt_fix as sqrt_fix
 
 DTYPE = np.double # Default datatype for numpy arrays
 ctypedef np.double_t DTYPE_t
@@ -170,3 +171,46 @@ cdef class MadgwickOriginalSqrtDouble(Base):
 
         return Q
 
+cdef class MadgwickFixed(Base):
+    """Same as sqrt filter but with 2x fix applied."""
+
+    def __init__(self, q0 = [1.0, 0.0, 0.0, 0.0], beta = 0.1, freq = 256):
+        self.set_q(q0)
+        self.set_beta(beta)
+        self.set_freq(freq)
+    
+    def set_q(self, q):
+        sqrt_fix.q0 = q[0]
+        sqrt_fix.q1 = q[1]
+        sqrt_fix.q2 = q[2]
+        sqrt_fix.q3 = q[3]
+
+    def set_beta(self, beta):
+        sqrt_fix.beta = beta
+
+    def set_freq(self, freq):
+        sqrt_fix.sampleFreq = freq
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)  
+    def _run_updates(self, np.ndarray[DTYPE_t, ndim=2] acc, 
+                          np.ndarray[DTYPE_t, ndim=2] gyr, 
+                          np.ndarray[DTYPE_t, ndim=2] mag ):
+        """Efficiently run imu data arrays through the filter."""
+
+        cdef int samples = acc.shape[0] # Number of steps
+
+        cdef np.ndarray[DTYPE_t, ndim=2] Q = np.zeros((samples, 4), dtype=DTYPE)
+
+        for s in range(samples):
+
+            sqrt_fix.MadgwickAHRSupdate(gyr[s,0], gyr[s,1], gyr[s,2], 
+                acc[s,0], acc[s,1], acc[s,2], 
+                mag[s,0], mag[s,1], mag[s,2])
+
+            Q[s,0] = sqrt_fix.q0
+            Q[s,1] = sqrt_fix.q1
+            Q[s,2] = sqrt_fix.q2
+            Q[s,3] = sqrt_fix.q3
+        
+        return Q

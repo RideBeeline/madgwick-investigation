@@ -9,6 +9,7 @@ import numpy as np
 
 import madfilters.mat as mat
 import madfilters.py as py
+import madfilters.cpp as cpp
 import madfilters.utils.io as io
 import madfilters.utils.orientation as ot
 
@@ -68,6 +69,9 @@ plot_filter_output(ax0, ax1, Q_base, Q, "ahrs")
 Q = py.MatlabClone(beta=beta, freq=freq, q0=q0).update(acc, gyr, mag)
 plot_filter_output(ax0, ax1, Q_base, Q, "Matlab Clone")
 
+# C code with 2x fix
+Q = cpp.MadgwickFixed(beta=beta, freq=freq, q0=q0).update(acc, gyr, mag)
+plot_filter_output(ax0, ax1, Q_base, Q, "C + fixed")
 
 ax0.legend()
 
