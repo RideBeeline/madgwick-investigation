@@ -1,1 +1,2 @@
 from .ahrs_madgwick.ahrs_wrapper import AhrsMadgwick
+from .matlab_clone.matlab_clone_wrapper import MatlabClone
