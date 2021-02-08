@@ -22,6 +22,13 @@ Same as above, with fast_inv_sqrt() now using math::sqrt() and all floats change
 `madgwick_paper/src/MadgwickPaper.cpp`
 The c code copied from the appending of the original report.
 
+## Adafruit AHRS
+`Adafruit_AHRS/src/Adafruit_AHRS_Madgwick.cpp`
+Adafruit's library from their [github](https://github.com/adafruit/Adafruit_AHRS/blob/master/src/Adafruit_AHRS_Madgwick.h)
+
+Small change to make members public, makes it possible to set q0.
+
+
 ## Installation
 
 You have to be in the `cpp` directory before running `setup.py`. Like so:

@@ -7,7 +7,7 @@ Makes it easy to build all the cypthon packages.
 import subprocess
 from setuptools import setup, find_packages
 
-directories = ["madgwick_originals", "madgwick_paper"]
+directories = ["madgwick_originals", "madgwick_paper", "Adafruit_AHRS"]
 
 for directory in directories:
     print(f"\nStarting setup.py build in ./{directory} ...\n")
