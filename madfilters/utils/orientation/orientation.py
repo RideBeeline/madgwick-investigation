@@ -88,7 +88,13 @@ def q_angle_diff_2(A, B):
     omega = 2 * np.arccos(cos_omega)
     return np.rad2deg(omega)
     
+def q_angle_diff_safe(A, B):
+    A = A / np.linalg.norm(A, axis=1, keepdims=True)
+    B = B / np.linalg.norm(B, axis=1, keepdims=True)
+    QAB = q_prod(q_conj(A), B) # quaternion from A->B
 
+    angle = 2 * np.arctan2(np.linalg.norm(QAB[:,1:3],axis=1), QAB[:,0])
+    return np.rad2deg(angle)
 
 
 
