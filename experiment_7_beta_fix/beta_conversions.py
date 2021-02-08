@@ -51,7 +51,7 @@ def find_optimum_beta(beta_base, base_filter, free_filter):
     return beta_optimum
 
 def find_optimum_betas(base_filter, free_filter):
-    betas = np.linspace(0.001,1,100)
+    betas = np.linspace(0.001,1,10)
     vbeta_diff = np.vectorize(find_optimum_beta)
     y_values = vbeta_diff(betas, base_filter, free_filter)
 
@@ -61,24 +61,27 @@ mad_filter = cpp.MadgwickOriginalSqrt(freq=freq)
 
 betas, y_values = find_optimum_betas(base_filter=ahrs_filter, free_filter=mad_filter)
 
-fig = plt.figure(figsize=(14, 4), facecolor="w")
+fig = plt.figure(figsize=(14, 9), facecolor="w")
 
 fig.suptitle('Beta Conversions', fontsize=16)
 
-ax1 = fig.add_subplot()
-ax1.plot(betas, y_values/betas, label='Py AHRS vs original C')
-ax1.set(xlabel='beta Py Ahrs', ylabel='beta ratio: C / Py Ahrs', title="Ratio of beta values")
+ax0 = fig.add_subplot(211)
+ax0.plot(betas, y_values/betas, label='Py AHRS vs original C')
+ax0.set(xlabel='Py Ahrs beta', ylabel='beta ratio: C / Py Ahrs', title="Ratio of beta values")
+ax0.grid()
+ax0.legend()
+
+
+fixed_filter = cpp.MadgwickFixed(freq=freq)
+
+sqrt_betas, fixed_betas = find_optimum_betas(base_filter=mad_filter, free_filter=fixed_filter)
+
+ax1 = fig.add_subplot(212)
+ax1.plot(sqrt_betas, fixed_betas, label='Fixed C')
+ax1.set(xlabel='Sqrt C beta', ylabel='Fixed C beta', title="Bug -> Fix conversion")
 ax1.grid()
-ax1.legend()
 
-
-# TODO: Run through fixed cpp filters for speed to produce bug->fix beta change update graph
-# %%
-print(find_optimum_beta(beta_base=0.303, base_filter=mad_filter, free_filter=ahrs_filter))
-
-# %%
-print(find_optimum_beta(beta_base=0.057, base_filter=ahrs_filter, free_filter=mad_filter))
-# %%
+plt.subplots_adjust(hspace=0.3)
 
 plt.savefig(f"./exp7_beta_conversions.png", transparent=False)
 plt.show()
