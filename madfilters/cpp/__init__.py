@@ -1,2 +1,2 @@
 """ C / Cpp based filters """
-from .madgwick_originals.MadgwickOriginals import MadgwickOriginal
+from .madgwick_originals.MadgwickOriginals import MadgwickOriginal, MadgwickOriginalSqrt
