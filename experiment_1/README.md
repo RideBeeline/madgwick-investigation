@@ -1,4 +1,4 @@
-# Exp 1 - X-IO implementation 
+# Exp 1 - X-IO implementation & data
 
 Tests the original filters from the x-io website. Uses the supplied test data at the default beta and sampling frequency. 
 
@@ -6,7 +6,7 @@ Tests the original filters from the x-io website. Uses the supplied test data at
 The two filters don't agree. The disagreement is small, ~3 degrees but it's the same math.
 
 
-![alt text](./exp1_mat_vs_c.png "Logo Title Text 1")
+![Graph](./exp1_mat_vs_c.png "Graph 1")
 
 ## Reproduce
 1. Open `madfilters/mat` in Octave / Matlab and run `ExampleDataRun.m` which generates `ExampleData.hdf5`
