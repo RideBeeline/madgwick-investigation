@@ -24,13 +24,21 @@ mad_orig = cpp.MadgwickOriginal(beta=beta, freq=freq, q0=q0)
 orig_Q = mad_orig.update(acc, gyr, mag)
 orig_yaw = ot.q_to_aero_yaw(orig_Q)
 
-
+# Through the code without fast_inv_sqrt()
 mad_sqrt = cpp.MadgwickOriginalSqrt(beta=beta, freq=freq, q0=q0)
 sqrt_Q = mad_sqrt.update(acc, gyr, mag)
 sqrt_yaw = ot.q_to_aero_yaw(sqrt_Q)
 
 # Calculate differences in quaternions
 sqrt_diff = ot.q_angle_diff(orig_Q, sqrt_Q)
+
+# Through the code without fast_inv_sqrt() and doubles
+mad_sqrt_d = cpp.MadgwickOriginalSqrtDouble(beta=beta, freq=freq, q0=q0)
+sqrt_d_Q = mad_sqrt_d.update(acc, gyr, mag)
+sqrt_d_yaw = ot.q_to_aero_yaw(sqrt_d_Q)
+
+# Calculate differences in quaternions
+sqrt_d_diff = ot.q_angle_diff(orig_Q, sqrt_d_Q)
 
 # %%
 # Plot figure
@@ -45,6 +53,7 @@ spec = gridspec.GridSpec(ncols=1, nrows=2,
 ax0 = plt.subplot(spec[0])
 ax0.plot(times, orig_yaw, '--g', label='Unmodified', alpha=0.7)
 ax0.plot(times, sqrt_yaw, '--r', label='1/sqrt()', alpha=0.7)
+ax0.plot(times, sqrt_d_yaw, '--r', label='1/sqrt()+double', alpha=0.7)
 
 
 ax0.set(ylabel='yaw (deg)',
@@ -63,7 +72,9 @@ ax1 = plt.subplot(spec[1])
 ax1.set(xlabel='time (s)', ylabel='difference (deg)',
         title="Difference in angle between quaternions")
 ax1.grid()
-ax1.plot(times, sqrt_diff, c='#3355ff', label='Matlab', alpha=0.7)
+ax1.plot(times, sqrt_diff, c='#3355ff', label='Unmod-sqrt', alpha=0.7)
+ax1.plot(times, sqrt_d_diff, c='#ff5533', label='Unmod-double', alpha=0.7)
+ax1.plot(times, ot.q_angle_diff(sqrt_Q, sqrt_d_Q), c='#55ff33', label='sqrt-double', alpha=0.7)
 
 plt.savefig("./exp3_c_vs_c.png", transparent=False)
 
