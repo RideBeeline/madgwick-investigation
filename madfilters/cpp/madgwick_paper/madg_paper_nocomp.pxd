@@ -1,8 +1,8 @@
 
-cdef extern from "src_original/MadgwickPaper.cpp":
+cdef extern from "src_nocomp/MadgwickPaper_nocomp.cpp":
     pass
 
-cdef extern from "src_original/MadgwickPaper.h" namespace "paper":
+cdef extern from "src_nocomp/MadgwickPaper_nocomp.h" namespace "nocomp":
     extern float deltat
     extern float beta
     extern float zeta
