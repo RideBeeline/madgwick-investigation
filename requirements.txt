@@ -1,5 +1,6 @@
 -e .
 numpy
+scipy
 h5py
 matplotlib
 ahrs
