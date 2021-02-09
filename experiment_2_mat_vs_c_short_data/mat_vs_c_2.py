@@ -12,7 +12,7 @@ import madfilters.cpp as cpp
 import madfilters.utils.io as io
 import madfilters.utils.orientation as ot
 
-beta = 0.3
+beta = 0.06
 
 # Load imu data
 

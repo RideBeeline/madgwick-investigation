@@ -25,7 +25,7 @@ fig.suptitle("C style filters", fontsize=16)
 spec = gridspec.GridSpec(ncols=1, nrows=2, height_ratios=[2, 1])
 
 ax0 = plt.subplot(spec[0])
-ax0.set(ylabel='yaw (deg)', title="Filter output yaw value.")
+ax0.set(ylabel='yaw (deg)', title="Filter output, yaw value")
 ax0.grid()
 ax0.set_yticks([-30, 0, 45, 90, 135])
 ax0.text(15, 30, rf'$\beta={beta:0.2f},\ f={freq:.1f} \mathrm{{Hz}}$',
@@ -37,11 +37,11 @@ ax1.set(xlabel='time (s)', ylabel='difference (deg)',
         title="Difference in angle between quaternions")
 ax1.grid()
 
-num_plots = 4
+num_plots = 5
 curr_plot = 0
 
 cmap = plt.get_cmap('gist_rainbow')
-norm = matplotlib.colors.Normalize(vmin=0, vmax=num_plots)  
+norm = matplotlib.colors.Normalize(vmin=0, vmax=num_plots-1)  
 
 # Through the code without fast_inv_sqrt()
 mad_sqrt = cpp.MadgwickOriginalSqrt(beta=beta, freq=freq, q0=q0)
@@ -62,7 +62,10 @@ def run_and_plot_filter(ax0, ax1, Q_base, madg, label):
 mad_sqrt.set_q(q0)
 run_and_plot_filter(ax0, ax1, Q_base, mad_sqrt, 'Madg C (sqrt fix)')
 
-
+# Through the unmodified code
+run_and_plot_filter(ax0, ax1, Q_base, 
+    cpp.MadgwickOriginal(beta=beta, freq=freq, q0=q0), 
+    'Madg C')
 
 # Through the code without fast_inv_sqrt() and doubles
 run_and_plot_filter(ax0, ax1, Q_base, 
