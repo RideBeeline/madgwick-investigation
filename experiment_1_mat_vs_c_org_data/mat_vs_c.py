@@ -32,7 +32,7 @@ diff = ot.q_angle_diff(m_Q, c_Q)
 
 fig = plt.figure(figsize=(12, 7), facecolor="w")
 
-fig.suptitle("Madgwick's implementations", fontsize=16)
+fig.suptitle("Madgwick's Implementations with Original Data", fontsize=16)
 
 spec = gridspec.GridSpec(ncols=1, nrows=2,
                          height_ratios=[2, 1])
