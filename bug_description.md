@@ -24,7 +24,7 @@ _2bx = sqrt(hx * hx + hy * hy);
 _2bz = -_2q0mx * q2 + _2q0my * q1 + mz * q0q0 + _2q1mx * q3 - mz * q1q1 + _2q2 * my * q3 - mz * q2q2 + mz * q3q3;
 ```
 
-`_2bx` and `_2bz` refer to two components of the b vector from the paper, multiplied by 2. However, the multiplication is missing and the right hand side of above's equations actually represent what would be `_bx` and `_bz`.
+`_2bx` and `_2bz` refer to two components of the b vector from the paper, multiplied by 2. However, the multiplication seems to be missing and the right hand side of above's equations actually represent what would be `_bx` and `_bz`.
 ### Fix
 `_2bx` and `_2bz` are only half what they ought to be. A fix is the equivalent of this:
 

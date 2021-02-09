@@ -7,13 +7,17 @@ Madgwick's AHRS algorithm for orientation sensor fusion is a well regarded filte
 However, the C implementation has a slight bug that results in non-optimal fusion when using the full MARG filter. Specifically, the C version does not seem to agree with the mathematics of the paper or the Matlab implementation, as well as open source Python implementations that are be based on the Matlab code.
 
 ## Motivation
-I was characterising IMUs and found that on-board processing results differed to post processed results, eventually tracking the difference to parts in the Python and C implementations of the Madgwick filter. Since both implementations are widely used I was surprised to be able to track it back to the original implementations too. It is important to note that this is not a critique of the algorithm, purely a look at the implementations and what I believe to be a bug in the C version. Madgwick's filter is awesome and works very well, even with the bug.
+I was characterising IMUs and found that on-board processing results differed to post processed results, eventually tracking the difference to parts in the Python and C implementations of the Madgwick filter, leading to this type of graph:
+
+![Example Figure](example.png)
+
+Since both implementations are widely used I was surprised to be able to track it back to the original implementations too. It is important to note that this is not a critique of the algorithm, purely a look at the implementations and what I believe to be a bug in the C version. Madgwick's filter is awesome and works very well, even with the bug.
 
 ## Bugs
 There are actually two different, unrelated bugs. 
 
 ### Normalisation Bug
-The first, and less important bug is in the code from the project report describing the filter and is caused by the magenotmer readings being normalised after they are assigned. So it would not be noticeable when calling the function with already normalised data.
+The first, and less important bug is in the code from the project report describing the filter and is caused by the magnetomer readings being normalised after they are assigned. So it would not be noticeable when calling the function with already normalised data.
 
 This implementation is not very optimised and doesn't appear to be used much outside the report. It is refered here as the "paper version" even though it is also written in C.
 
