@@ -3,6 +3,7 @@ cimport cython
 import numpy as np
 cimport numpy as np
 cimport madg_paper as madg
+cimport madg_paper_fixed as madg_fixed
 cimport madg_paper_nocomp as madg_nocomp
 
 DTYPE = np.double # Default datatype for numpy arrays
@@ -82,6 +83,52 @@ cdef class MadgwickPaper(Base):
         
         return Q
 
+cdef class MadgwickPaperFixed(Base):
+    """This is the original filter from the paper but with a bug fix.
+    
+    The normalisation step was moved to the beginning of the function."""
+
+    def __init__(self, q0 = [1.0, 0.0, 0.0, 0.0], beta = 0.1, freq = 256):
+        self.set_q(q0)
+        self.set_beta(beta)
+        self.set_freq(freq)
+        madg_fixed.zeta = 0
+    
+    def set_q(self, q):
+        madg_fixed.SEq_1 = q[0]
+        madg_fixed.SEq_2 = q[1]
+        madg_fixed.SEq_3 = q[2]
+        madg_fixed.SEq_4 = q[3]
+
+    def set_beta(self, beta):
+        madg_fixed.beta = beta
+    
+    def set_freq(self, freq):
+        madg_fixed.deltat = 1/freq
+
+    @cython.boundscheck(False)
+    @cython.wraparound(False)  
+    def _run_updates(self, np.ndarray[DTYPE_t, ndim=2] acc, 
+                          np.ndarray[DTYPE_t, ndim=2] gyr, 
+                          np.ndarray[DTYPE_t, ndim=2] mag ):
+        """Efficiently run imu data arrays through the filter."""
+
+        cdef int samples = acc.shape[0] # Number of steps
+
+        cdef np.ndarray[DTYPE_t, ndim=2] Q = np.zeros((samples, 4), dtype=DTYPE)
+
+        for s in range(samples):
+
+            madg_fixed.filterUpdate(gyr[s,0], gyr[s,1], gyr[s,2], 
+                acc[s,0], acc[s,1], acc[s,2], 
+                mag[s,0], mag[s,1], mag[s,2])
+
+            Q[s,0] = madg_fixed.SEq_1
+            Q[s,1] = madg_fixed.SEq_2
+            Q[s,2] = madg_fixed.SEq_3
+            Q[s,3] = madg_fixed.SEq_4
+        
+        return Q
 
 cdef class MadgwickPaperNocomp(Base):
     """This is the original filter from the paper but with gyro and magnetic compensation removed"""
