@@ -19,15 +19,15 @@ There are actually two different, unrelated bugs.
 ### Normalisation Bug
 The first, and less important bug is in the code from the project report describing the filter and is caused by the magnetomer readings being normalised after they are assigned. So it would not be noticeable when calling the function with already normalised data.
 
-This implementation is not very optimised and doesn't appear to be used much outside the report. It is refered here as the "paper version" even though it is also written in C.
+This implementation is not very optimised and doesn't appear to be used much outside the report. It is referred here as the "paper version" even though it is also written in C.
 
 I only found it because I wanted to check if the x2 bug also features in the paper. (It does not)
 Only [Experiment 4](./experiment_4_mat_vs_c_vs_paper/README.md) uses this implementation and shows the effect of fixing it.
 
 ### x2 Bug
-The second, more important bug is in the distributed C code. A missing *2 in the magnetic distortion copensation step causes the filter to use a smaller b than intended and consequently behave slightly differently during an AHRS update. The effect of the bug is not constant and it appears that one can compensate for it to some extend by choosing a different Beta. Still, it would be surprising if I were the first to discover it.
+The second, more important bug is in the distributed C code. A missing *2 in the magnetic distortion compensation step causes the filter to use a smaller b than intended and consequently behave slightly differently during an AHRS update. The effect of the bug is not constant and it appears that one can compensate for it to some extent by choosing a different Beta. Still, it would be surprising if I were the first to discover it.
 
-This implementation is optimised and code based on it is widely used. I expect most versions based on it have the same issue because the code is copied verbatim. It is refered here as the "C version".
+This implementation is optimised and code based on it is widely used. I expect most versions based on it have the same issue because the code is copied verbatim. It is referred here as the "C version".
 
 This is the bug most of the "experiments" focus on.
 
@@ -57,10 +57,10 @@ Please look at the more [detailed description](./madfilters/README.md) for links
 | C code from x-io, with fix     |        |          |    x   |
 
 ## Impact
-The bug only effects the transient, dynamic response. However, if the compensation involves the choice of a different, non-optimum Beta value, the static performance may also be impacted. The size of the impact varies. It seems to depend on the orientation, sampling frequency, and / or chosen Beta. For example, in our testing, the bug was not detactable when moving the sensor flat around its yaw axis only.
+The bug only effects the transient, dynamic response. However, if the compensation involves the choice of a different, non-optimum Beta value, the static performance may also be impacted. The size of the impact varies. It seems to depend on the orientation, sampling frequency, and / or chosen Beta. For example, in our testing, the bug was not detectable when moving the sensor flat around its yaw axis only.
 
 ## Compensating with Beta
- [Experiment 7](./experiment_7_beta_fix/README.md) attempts to make a filter with the x2 Bug behave as if it didn't have it by selecting an optimum value of Beta. This can mostly compensate for the bug in the test case but not fully. It is also not clear if that compensation works with different orientations, sample rates, noise, and selected reference Beta as it just optimises for the short test data. The chosen Beta is 5 times larger than the one used in the reference filter without the bug. Repeating the test with different data at a different frequency resulted in an optimum beta that was only ~2 times the original. 
+ [Experiment 7](./experiment_7_beta_fix/README.md) attempts to make a filter with the x2 bug behave as if it didn't have it by selecting an optimum value of Beta. This can mostly compensate for the bug in the test case but not fully. It is also not clear if that compensation works with different orientations, sample rates, noise, and selected reference Beta as it just optimises for the short test data. The chosen Beta is 5 times larger than the one used in the reference filter without the bug. Repeating the test with different data at a different frequency resulted in an optimum beta that was only ~2 times the original. 
 
 ## Mathematical Analysis
 Missing the x2 changes the minimisation function as defined in (29). The filter now does the gradient descent with the objective of finding a quaternion that transforms the earth magnetic field `b` into double the the normalised magnetic reading `m`. Of course, a unit quaternion does not change the magnitude of the vector it rotates so one might think that it doesn't matter because the function is still minimised when the resulting vectors are aligned. Clearly that's not what happens but I don't know why.

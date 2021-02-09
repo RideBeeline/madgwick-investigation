@@ -15,7 +15,7 @@ Endings changed to .cpp for easier integration with *Cython* and added ability t
 ## Madgwick, fast_inv_sqrt -> 1/sqrt()
 [Source File](./cpp/madgwick_originals/MadgwickAHRS_sqrt/MadgwickAHRS_sq.cpp): `cpp/madgwick_originals/MadgwickAHRS_sqrt/MadgwickAHRS_sq.cpp`
 
-Same as the above but with fast_inv_sqrt() now using math::sqrtf(). Also added a namespace so all the madgwick implementations can be part of the same cython package.
+Same as the above but with fast_inv_sqrt() now using `math::sqrtf()`. Also added a namespace so all the madgwick implementations can be part of the same cython package.
 
 ## Madgwick, 1/sqrt() and float -> double
 [Source File](./cpp/madgwick_originals/MadgwickAHRS_sqrt_d/MadgwickAHRS_sq_d.cpp):  `cpp/madgwick_originals/MadgwickAHRS_sqrt_d/MadgwickAHRS_sq_d.cpp`
@@ -47,7 +47,7 @@ Changed to Cpp to support namespaces and added one, added `deltat`, `beta`, `zet
 ## Madgwick Paper + Normalisation Bug Fix
 [Source File](./cpp/madgwick_paper/src_norm_fix/MadgwickPaper_norm_fix.cpp): `cpp/madgwick_paper/src_norm_fix/MadgwickPaper_norm_fix.cpp` 
 
-Same as above but with the normalisation code for acceration and magnetic field samples moved towards the top of the update function, before their results are used.
+Same as above but with the normalisation code for acceleration and magnetic field samples moved towards the top of the update function, before their results are used.
 
 ## Madgwick Paper + Norm Fix + No gyro compensation
 [Source File](./cpp/madgwick_paper/src_nocomp/MadgwickPaper_nocomp.cpp): `cpp/madgwick_paper/src_nocomp/MadgwickPaper_nocomp.cpp` 
