@@ -46,6 +46,18 @@ void filterUpdate(float w_x, float w_y, float w_z, float a_x, float a_y,
       w_err_z;         // estimated direction of the gyroscope error (angular)
   float h_x, h_y, h_z; // computed flux in the earth frame
 
+  // normalise the accelerometer measurement
+  norm = sqrt(a_x * a_x + a_y * a_y + a_z * a_z);
+  a_x /= norm;
+  a_y /= norm;
+  a_z /= norm;
+
+  // normalise the magnetometer measurement
+  norm = sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
+  m_x /= norm;
+  m_y /= norm;
+  m_z /= norm;
+
   // axulirary variables to avoid reapeated calcualtions
 
   float halfSEq_1 = 0.5f * SEq_1;
@@ -72,20 +84,9 @@ void filterUpdate(float w_x, float w_y, float w_z, float a_x, float a_y,
   float SEq_2SEq_3;
   float SEq_2SEq_4 = SEq_2 * SEq_4;
   float SEq_3SEq_4;
-  float twom_x = 2.0f * m_x;
+  float twom_x = 2.0f * m_x; // << m_x used, should be normalised first
   float twom_y = 2.0f * m_y;
   float twom_z = 2.0f * m_z;
-  // normalise the accelerometer measurement
-  norm = sqrt(a_x * a_x + a_y * a_y + a_z * a_z);
-  a_x /= norm;
-  a_y /= norm;
-  a_z /= norm;
-
-  // normalise the magnetometer measurement
-  norm = sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
-  m_x /= norm;
-  m_y /= norm;
-  m_z /= norm;
 
   // compute the objective function and Jacobian
   f_1 = twoSEq_2 * SEq_4 - twoSEq_1 * SEq_3 - a_x;
@@ -144,20 +145,20 @@ void filterUpdate(float w_x, float w_y, float w_z, float a_x, float a_y,
   SEqHatDot_4 = SEqHatDot_4 / norm;
 
   // compute angular estimated direction of the gyroscope error
-  w_err_x = twoSEq_1 * SEqHatDot_2 - twoSEq_2 * SEqHatDot_1 -
-            twoSEq_3 * SEqHatDot_4 + twoSEq_4 * SEqHatDot_3;
-  w_err_y = twoSEq_1 * SEqHatDot_3 + twoSEq_2 * SEqHatDot_4 -
-            twoSEq_3 * SEqHatDot_1 - twoSEq_4 * SEqHatDot_2;
-  w_err_z = twoSEq_1 * SEqHatDot_4 - twoSEq_2 * SEqHatDot_3 +
-            twoSEq_3 * SEqHatDot_2 - twoSEq_4 * SEqHatDot_1;
+  // w_err_x = twoSEq_1 * SEqHatDot_2 - twoSEq_2 * SEqHatDot_1 -
+  //           twoSEq_3 * SEqHatDot_4 + twoSEq_4 * SEqHatDot_3;
+  // w_err_y = twoSEq_1 * SEqHatDot_3 + twoSEq_2 * SEqHatDot_4 -
+  //           twoSEq_3 * SEqHatDot_1 - twoSEq_4 * SEqHatDot_2;
+  // w_err_z = twoSEq_1 * SEqHatDot_4 - twoSEq_2 * SEqHatDot_3 +
+  //           twoSEq_3 * SEqHatDot_2 - twoSEq_4 * SEqHatDot_1;
 
-  // compute and remove the gyroscope baises
-  w_bx += w_err_x * deltat * zeta;
-  w_by += w_err_y * deltat * zeta;
-  w_bz += w_err_z * deltat * zeta;
-  w_x -= w_bx;
-  w_y -= w_by;
-  w_z -= w_bz;
+  // // compute and remove the gyroscope baises
+  // w_bx += w_err_x * deltat * zeta;
+  // w_by += w_err_y * deltat * zeta;
+  // w_bz += w_err_z * deltat * zeta;
+  // w_x -= w_bx;
+  // w_y -= w_by;
+  // w_z -= w_bz;
 
   // compute the quaternion rate measured by gyroscopes
   SEqDot_omega_1 = -halfSEq_2 * w_x - halfSEq_3 * w_y - halfSEq_4 * w_z;

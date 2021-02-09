@@ -131,7 +131,7 @@ cdef class MadgwickPaperFixed(Base):
         return Q
 
 cdef class MadgwickPaperNocomp(Base):
-    """This is the original filter from the paper but with gyro and magnetic compensation removed"""
+    """This is the fixed filter from the paper with gyroscopy compensation removed"""
 
     def __init__(self, q0 = [1.0, 0.0, 0.0, 0.0], beta = 0.1, freq = 256):
         self.set_q(q0)

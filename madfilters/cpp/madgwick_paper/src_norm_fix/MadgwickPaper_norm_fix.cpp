@@ -47,6 +47,18 @@ void filterUpdate(float w_x, float w_y, float w_z, float a_x, float a_y,
       w_err_z;         // estimated direction of the gyroscope error (angular)
   float h_x, h_y, h_z; // computed flux in the earth frame
 
+  // normalise the accelerometer measurement
+  norm = sqrt(a_x * a_x + a_y * a_y + a_z * a_z);
+  a_x /= norm;
+  a_y /= norm;
+  a_z /= norm;
+
+  // normalise the magnetometer measurement
+  norm = sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
+  m_x /= norm;
+  m_y /= norm;
+  m_z /= norm;
+
   // axulirary variables to avoid reapeated calcualtions
 
   float halfSEq_1 = 0.5f * SEq_1;
@@ -73,20 +85,9 @@ void filterUpdate(float w_x, float w_y, float w_z, float a_x, float a_y,
   float SEq_2SEq_3;
   float SEq_2SEq_4 = SEq_2 * SEq_4;
   float SEq_3SEq_4;
-  float twom_x = 2.0f * m_x;
+  float twom_x = 2.0f * m_x; // << m_x used, should be normalised first
   float twom_y = 2.0f * m_y;
   float twom_z = 2.0f * m_z;
-  // normalise the accelerometer measurement
-  norm = sqrt(a_x * a_x + a_y * a_y + a_z * a_z);
-  a_x /= norm;
-  a_y /= norm;
-  a_z /= norm;
-
-  // normalise the magnetometer measurement
-  norm = sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
-  m_x /= norm;
-  m_y /= norm;
-  m_z /= norm;
 
   // compute the objective function and Jacobian
   f_1 = twoSEq_2 * SEq_4 - twoSEq_1 * SEq_3 - a_x;
